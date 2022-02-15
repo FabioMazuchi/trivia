@@ -80,6 +80,7 @@ class LoginScreen extends Component {
 LoginScreen.propTypes = {
   getToken: PropTypes.func.isRequired,
   history: PropTypes.objectOf.isRequired,
+  getEmailName: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
