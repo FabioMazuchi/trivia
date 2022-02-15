@@ -1,9 +1,9 @@
 import player from './player';
 import token from './token';
 
-const { combinereducers } = require('redux');
+const { combineReducers } = require('redux');
 
-const rootReducer = combinereducers({
+const rootReducer = combineReducers({
   player,
   token,
 });

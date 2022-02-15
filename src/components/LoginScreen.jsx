@@ -1,13 +1,18 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import logo from "../trivia.png";
+import { fetchToken } from "../redux/actions";
+import { Link } from "react-router-dom";
 
-export default class LoginScreen extends Component {
+class LoginScreen extends Component {
   constructor() {
     super();
 
     this.state = {
-      name: '',
-      email: '',
+      name: "",
+      email: "",
     };
+    this.logar = this.logar.bind(this);
   }
 
   handleChange = ({ target }) => {
@@ -17,45 +22,64 @@ export default class LoginScreen extends Component {
 
   loginVerifiyer = () => {
     const { email, name } = this.state;
-    const includesAt = email.includes('@');
-    const includesCom = email.includes('.com');
+    const includesAt = email.includes("@");
+    const includesCom = email.includes(".com");
     const NAME_LENGTH = 3;
     const verifyName = name.length >= NAME_LENGTH;
     const isButtonDisable = !(includesAt && includesCom && verifyName);
     return isButtonDisable;
+  };
+
+  async logar() {
+    const { getToken, history, token } = this.props;
+    await getToken();
+    history.push('/jogo');
+    console.log(token);
   }
 
   render() {
-    const {
-      name, email,
-    } = this.state;
+    const { name, email } = this.state;
     return (
-      <form>
-        <input
-          type="text"
-          name="name"
-          value={ name }
-          data-testid="input-player-name"
-          placeholder="Nome"
-          onChange={ this.handleChange }
-        />
-        <input
-          type="email"
-          name="email"
-          value={ email }
-          data-testid="input-gravatar-email"
-          placeholder="Email"
-          onChange={ this.handleChange }
-        />
-        <button
-          type="button"
-          disabled={ this.loginVerifiyer() }
-          data-testid="btn-play"
-        >
-          Play!
-
-        </button>
-      </form>
+      <>
+        <img src={logo} className="App-logo" alt="logo" />
+        <form>
+          <input
+            type="text"
+            name="name"
+            value={name}
+            data-testid="input-player-name"
+            placeholder="Nome"
+            onChange={this.handleChange}
+          />
+          <input
+            type="email"
+            name="email"
+            value={email}
+            data-testid="input-gravatar-email"
+            placeholder="Email"
+            onChange={this.handleChange}
+          />
+          <button
+            type="button"
+            disabled={this.loginVerifiyer()}
+            data-testid="btn-play"
+            onClick={this.logar}
+          >
+            Play!
+          </button>
+          <Link data-testid="btn-settings" to="/config">Configuração</Link>
+        </form>
+      </>
     );
   }
 }
+
+const mapDispatchToProps = (dispatch) => ({
+  getToken: () => dispatch(fetchToken()),
+});
+
+const mapStateToProps = (state) => ({
+  token: state.token.token,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);
