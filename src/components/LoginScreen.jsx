@@ -1,16 +1,17 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import logo from "../trivia.png";
-import { fetchToken } from "../redux/actions";
-import { Link } from "react-router-dom";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import logo from '../trivia.png';
+import { fetchToken } from '../redux/actions';
 
 class LoginScreen extends Component {
   constructor() {
     super();
 
     this.state = {
-      name: "",
-      email: "",
+      name: '',
+      email: '',
     };
     this.logar = this.logar.bind(this);
   }
@@ -22,8 +23,8 @@ class LoginScreen extends Component {
 
   loginVerifiyer = () => {
     const { email, name } = this.state;
-    const includesAt = email.includes("@");
-    const includesCom = email.includes(".com");
+    const includesAt = email.includes('@');
+    const includesCom = email.includes('.com');
     const NAME_LENGTH = 3;
     const verifyName = name.length >= NAME_LENGTH;
     const isButtonDisable = !(includesAt && includesCom && verifyName);
@@ -31,48 +32,54 @@ class LoginScreen extends Component {
   };
 
   async logar() {
-    const { getToken, history, token } = this.props;
+    const { getToken, history } = this.props;
     await getToken();
     history.push('/jogo');
-    console.log(token);
   }
 
   render() {
     const { name, email } = this.state;
     return (
       <>
-        <img src={logo} className="App-logo" alt="logo" />
+        <img src={ logo } className="App-logo" alt="logo" />
         <form>
           <input
             type="text"
             name="name"
-            value={name}
+            value={ name }
             data-testid="input-player-name"
             placeholder="Nome"
-            onChange={this.handleChange}
+            onChange={ this.handleChange }
           />
           <input
             type="email"
             name="email"
-            value={email}
+            value={ email }
             data-testid="input-gravatar-email"
             placeholder="Email"
-            onChange={this.handleChange}
+            onChange={ this.handleChange }
           />
           <button
             type="button"
-            disabled={this.loginVerifiyer()}
+            disabled={ this.loginVerifiyer() }
             data-testid="btn-play"
-            onClick={this.logar}
+            onClick={ this.logar }
           >
             Play!
           </button>
-          <Link data-testid="btn-settings" to="/config">Configuração</Link>
         </form>
+        <Link className="config" data-testid="btn-settings" to="/config">
+          Configuração
+        </Link>
       </>
     );
   }
 }
+
+LoginScreen.propTypes = {
+  getToken: PropTypes.func.isRequired,
+  history: PropTypes.objectOf.isRequired,
+};
 
 const mapDispatchToProps = (dispatch) => ({
   getToken: () => dispatch(fetchToken()),

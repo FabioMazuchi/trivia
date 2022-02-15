@@ -1,8 +1,7 @@
-import { REQUEST_TOKEN, GET_TOKEN, FAILED_REQUEST } from "../actions";
+import { REQUEST_TOKEN, GET_TOKEN, FAILED_REQUEST } from '../actions';
 
 const INITIAL_STATE = {
-  token: "",
-  // isFetching: false,
+  token: '',
 };
 
 const token = (state = INITIAL_STATE, action) => {
@@ -10,7 +9,7 @@ const token = (state = INITIAL_STATE, action) => {
   case REQUEST_TOKEN:
     return { ...state };
   case GET_TOKEN:
-    return { ...state, token: action.payload.token };
+    return action.payload.token;
   case FAILED_REQUEST:
     return { ...state, token: action.payload };
   default:
