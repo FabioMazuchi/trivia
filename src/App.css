@@ -55,3 +55,9 @@
     transform: translate3d(4px, 0, 0);
   }
 }
+
+.config {
+  color: white;
+  margin-top: 10px;
+  text-decoration: none;
+}
