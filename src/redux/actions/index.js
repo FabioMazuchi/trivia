@@ -1,6 +1,11 @@
 export const REQUEST_TOKEN = 'REQUEST_TOKEN';
 export const GET_TOKEN = 'GET_TOKEN';
 export const FAILED_REQUEST = 'FAILED_REQUEST';
+export const GET_EMAIL_NOME = 'GET_EMAIL_NOME';
+
+export function getEmailNome(state) {
+  return { type: GET_EMAIL_NOME, payload: state };
+}
 
 export function requestToken() {
   return { type: REQUEST_TOKEN };

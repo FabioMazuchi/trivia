@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Header from './Header';
 
 class Jogo extends Component {
   componentDidMount() {
@@ -11,6 +12,7 @@ class Jogo extends Component {
   render() {
     return (
       <section>
+        <Header />
         <h1>Tela de Jogo</h1>
       </section>
     );

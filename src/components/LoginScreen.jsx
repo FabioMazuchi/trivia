@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import logo from '../trivia.png';
-import { fetchToken } from '../redux/actions';
+import { fetchToken, getEmailNome } from '../redux/actions';
 
 class LoginScreen extends Component {
   constructor() {
@@ -32,8 +32,9 @@ class LoginScreen extends Component {
   };
 
   async logar() {
-    const { getToken, history } = this.props;
+    const { getToken, history, getEmailName } = this.props;
     await getToken();
+    getEmailName(this.state);
     history.push('/jogo');
   }
 
@@ -79,10 +80,12 @@ class LoginScreen extends Component {
 LoginScreen.propTypes = {
   getToken: PropTypes.func.isRequired,
   history: PropTypes.objectOf.isRequired,
+  getEmailName: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
   getToken: () => dispatch(fetchToken()),
+  getEmailName: (state) => dispatch(getEmailNome(state)),
 });
 
 const mapStateToProps = (state) => ({

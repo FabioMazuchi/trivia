@@ -37,6 +37,14 @@
   color: #61dafb;
 }
 
+header {
+  align-items: center;
+  background-color: rgb(63, 100, 98);
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 2%;
+}
+
 @keyframes shake {
 
   10%, 90% {
