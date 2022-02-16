@@ -1,26 +1,18 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { fetchPerguntas } from "../redux/actions";
-import Header from "./Header";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { fetchPerguntas } from '../redux/actions';
+import Header from './Header';
 
 class Jogo extends Component {
-  constructor() {
-    super();
-    this.state = {
-      expirou: false,
-    };
-  }
-
   componentDidMount() {
     this.buscarPerguntas();
   }
 
   buscarPerguntas() {
     const { token, getPerguntas } = this.props;
-    // console.log(token);
-    console.log("didMount");
-    localStorage.setItem("token", JSON.stringify(token));
+    console.log('didMount');
+    localStorage.setItem('token', JSON.stringify(token));
     getPerguntas(token);
   }
 
@@ -30,22 +22,22 @@ class Jogo extends Component {
       <section>
         <Header />
         {perguntas === undefined ? (
-          "Loading"
+          'Loading'
         ) : (
           <>
             {perguntas.map((pergunta, i) => (
-              <section key={i}>
+              <section key={ i }>
                 <h3 data-testid="question-category">{pergunta.category}</h3>
                 <p data-testid="question-text">{pergunta.question}</p>
                 <ul data-testid="answer-options">
                   <button type="button" data-testid="correct-answer">
                     {pergunta.correct_answer}
                   </button>
-                  {pergunta.incorrect_answers.map((incorreta, i) => (
+                  {pergunta.incorrect_answers.map((incorreta, index) => (
                     <button
                       type="button"
-                      key={i}
-                      data-testid={`wrong-answer-${i}`}
+                      key={ index }
+                      data-testid={ `wrong-answer-${index}` }
                     >
                       {incorreta}
                     </button>
@@ -62,6 +54,8 @@ class Jogo extends Component {
 
 Jogo.propTypes = {
   token: PropTypes.string.isRequired,
+  getPerguntas: PropTypes.func.isRequired,
+  perguntas: PropTypes.arrayOf.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({

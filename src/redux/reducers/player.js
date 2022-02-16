@@ -10,7 +10,6 @@ const INITIAL_STATE = {
 const player = (state = INITIAL_STATE, action) => {
   switch (action.type) {
   case GET_EMAIL_NOME:
-    // console.log(action);
     return {
       ...state,
       name: action.payload.name,

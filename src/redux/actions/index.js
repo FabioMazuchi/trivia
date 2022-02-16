@@ -29,24 +29,47 @@ function failedRequest() {
   return { type: FAILED_REQUEST };
 }
 
+const NUMBER = 3;
+
+// export function fetchToken() {
+//   return (dispatch) => {
+//     dispatch(requestToken());
+//     return fetch('https://opentdb.com/api_token.php?command=request')
+//       .then((response) => response.json())
+//       .then((json) => {
+//         if (json.response_code === NUMBER) {
+//           fetch('https://opentdb.com/api_token.php?command=request')
+//           .then((response) => response.json())
+//           .dispatch(getToken(json)
+//         }
+//         dispatch(getToken(json))}
+//       )
+//       .catch(() => dispatch(failedRequest()));
+//   };
+// }
+
 export function fetchToken() {
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch(requestToken());
-    return fetch('https://opentdb.com/api_token.php?command=request')
-      .then((response) => response.json())
-      .then((json) => dispatch(getToken(json)))
-      .catch(() => dispatch(failedRequest()));
+    let response = await fetch('https://opentdb.com/api_token.php?command=request');
+    let res = await response.json();
+    console.log(res.response_code);
+    if (res.response_code === NUMBER) {
+      response = await fetch('https://opentdb.com/api_token.php?command=request');
+      res = await response.json();
+      dispatch(getToken(res));
+    } else {
+      dispatch(getToken(res));
+    }
   };
 }
 
-const fetchPerguntas = () => async (dispatch) => {
-  const tokenStorage = localStorage.getItem('token') || '{}';
-  const token = JSON.parse(tokenStorage);
-  const ERRO_NUMBER = 3;
-  const response = await fetch(`https://opentdb.com/api.php?amount=5&token=${token}`);
-  if (response.response_code === ERRO_NUMBER) return dispatch(failedRequest())
-  const responseFinal = await response.json();
-  dispatch(getPerguntas(responseFinal));
+export function fetchPerguntas(token) {
+  return (dispatch) => {
+    dispatch(requestPerguntas());
+    return fetch(`https://opentdb.com/api.php?amount=5&token=${token}`)
+      .then((response) => response.json())
+      .then((json) => dispatch(getPerguntas(json)))
+      .catch(() => dispatch(failedRequest()));
+  };
 }
-
-export default fetchPerguntas;

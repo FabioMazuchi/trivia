@@ -45,12 +45,9 @@ Header.propTypes = {
   email: PropTypes.string.isRequired,
 };
 
-const mapStateToProps = (state) => {
-  // console.log(state);
-  return {
-    nome: state.player.name,
-    email: state.player.gravatarEmail,
-  };
-};
+const mapStateToProps = (state) => ({
+  nome: state.player.name,
+  email: state.player.gravatarEmail,
+});
 
 export default connect(mapStateToProps)(Header);

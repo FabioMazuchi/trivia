@@ -9,7 +9,6 @@ const perguntas = (state = INITIAL_STATE, action) => {
   case REQUEST_PERGUNTAS:
     return { ...state };
   case GET_PERGUNTAS:
-    // console.log(action);
     return { ...state, response: action.payload };
   case FAILED_REQUEST:
     return { ...state, response: action.payload };
