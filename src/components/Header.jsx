@@ -46,7 +46,7 @@ Header.propTypes = {
 };
 
 const mapStateToProps = (state) => {
-  console.log(state);
+  // console.log(state);
   return {
     nome: state.player.name,
     email: state.player.gravatarEmail,

@@ -1,19 +1,60 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import Header from './Header';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { fetchPerguntas } from "../redux/actions";
+import Header from "./Header";
 
 class Jogo extends Component {
+  constructor() {
+    super();
+    this.state = {
+      expirou: false,
+    };
+  }
+
   componentDidMount() {
-    const { token } = this.props;
-    localStorage.setItem('token', JSON.stringify(token));
+    this.buscarPerguntas();
+  }
+
+  buscarPerguntas() {
+    const { token, getPerguntas } = this.props;
+    // console.log(token);
+    console.log("didMount");
+    localStorage.setItem("token", JSON.stringify(token));
+    getPerguntas(token);
   }
 
   render() {
+    const { perguntas } = this.props;
     return (
       <section>
         <Header />
-        <h1>Tela de Jogo</h1>
+        {perguntas === undefined ? (
+          "Loading"
+        ) : (
+          <>
+            {perguntas.map((pergunta, i) => (
+              <section key={i}>
+                <h3 data-testid="question-category">{pergunta.category}</h3>
+                <p data-testid="question-text">{pergunta.question}</p>
+                <ul data-testid="answer-options">
+                  <button type="button" data-testid="correct-answer">
+                    {pergunta.correct_answer}
+                  </button>
+                  {pergunta.incorrect_answers.map((incorreta, i) => (
+                    <button
+                      type="button"
+                      key={i}
+                      data-testid={`wrong-answer-${i}`}
+                    >
+                      {incorreta}
+                    </button>
+                  ))}
+                </ul>
+              </section>
+            ))}
+          </>
+        )}
       </section>
     );
   }
@@ -23,8 +64,14 @@ Jogo.propTypes = {
   token: PropTypes.string.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  token: state.token.token,
+const mapDispatchToProps = (dispatch) => ({
+  getPerguntas: (token) => dispatch(fetchPerguntas(token)),
 });
 
-export default connect(mapStateToProps)(Jogo);
+const mapStateToProps = (state) => ({
+  token: state.token,
+  perguntas: state.perguntas.response.results,
+  code: state.perguntas.response.response_code,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Jogo);
