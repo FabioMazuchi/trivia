@@ -40,10 +40,11 @@ class Jogo extends Component {
   }
 
   setRespTrue = () => {
+    const { dificuldade, timeLeft } = this.state;
     let difficultyNumber;
-    if (difficulty === 'easy') {
+    if (dificuldade === 'easy') {
       difficultyNumber = 1;
-    } if (difficulty === 'medium') {
+    } if (dificuldade === 'medium') {
       difficultyNumber = 2;
     } else {
       difficultyNumber = NUMBER_3;
