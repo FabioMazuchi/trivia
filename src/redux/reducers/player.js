@@ -1,4 +1,4 @@
-import { GET_EMAIL_NOME } from '../actions';
+import { GET_EMAIL_NOME, UPDATE_POINTS } from '../actions';
 
 const INITIAL_STATE = {
   name: '',
@@ -14,6 +14,12 @@ const player = (state = INITIAL_STATE, action) => {
       ...state,
       name: action.payload.name,
       gravatarEmail: action.payload.email,
+    };
+  case UPDATE_POINTS:
+    return {
+      ...state,
+      score: action.payload,
+
     };
   default:
     return state;
