@@ -30,10 +30,10 @@ class Jogo extends Component {
   }
 
   componentDidUpdate(_prevProps, prevState) {
-    const { updateScore } = this.props;
+    const { updatePontuacao } = this.props;
     const { pontuacao } = this.state;
     if (pontuacao !== prevState.pontuacao) {
-      return updateScore(pontuacao);
+      return updatePontuacao(pontuacao);
     }
   }
 
@@ -177,12 +177,12 @@ Jogo.propTypes = {
   token: PropTypes.string.isRequired,
   getPerguntas: PropTypes.func.isRequired,
   perguntas: PropTypes.arrayOf.isRequired,
-  updateScore: PropTypes.string.isRequired,
+  updatePontuacao: PropTypes.string.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
   getPerguntas: (token) => dispatch(fetchPerguntas(token)),
-  updateScore: (pontuacao) => dispatch(updatePoints(pontuacao)),
+  updatePontuacao: (pontuacao) => dispatch(updatePoints(pontuacao)),
 });
 
 const mapStateToProps = (state) => ({
