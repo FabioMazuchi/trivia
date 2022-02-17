@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import logo from '../trivia.png';
-import { fetchToken, getEmailNome } from '../redux/actions';
+import { fetchToken, getEmailNome, fetchPerguntas } from '../redux/actions';
 
 class LoginScreen extends Component {
   constructor() {
@@ -14,6 +14,10 @@ class LoginScreen extends Component {
       email: '',
     };
     this.logar = this.logar.bind(this);
+  }
+
+  componentWillUnmount() {
+    this.buscarPerguntas();
   }
 
   handleChange = ({ target }) => {
@@ -30,6 +34,12 @@ class LoginScreen extends Component {
     const isButtonDisable = !(includesAt && includesCom && verifyName);
     return isButtonDisable;
   };
+
+  async buscarPerguntas() {
+    const { token, getPerguntas } = this.props;
+    localStorage.setItem('token', JSON.stringify(token));
+    await getPerguntas(token);
+  }
 
   async logar() {
     const { getToken, history, getEmailName } = this.props;
@@ -81,11 +91,14 @@ LoginScreen.propTypes = {
   getToken: PropTypes.func.isRequired,
   history: PropTypes.objectOf.isRequired,
   getEmailName: PropTypes.func.isRequired,
+  token: PropTypes.string.isRequired,
+  getPerguntas: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
   getToken: () => dispatch(fetchToken()),
   getEmailName: (state) => dispatch(getEmailNome(state)),
+  getPerguntas: (token) => dispatch(fetchPerguntas(token)),
 });
 
 const mapStateToProps = (state) => ({

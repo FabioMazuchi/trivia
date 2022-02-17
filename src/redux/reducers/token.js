@@ -11,7 +11,7 @@ const token = (state = INITIAL_STATE, action) => {
   case GET_TOKEN:
     return action.payload.token;
   case FAILED_REQUEST:
-    return { ...state, token: action.payload };
+    return { ...state };
   default:
     return state;
   }
