@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { fetchPerguntas } from '../redux/actions';
+import { fetchPerguntas, updatePoints } from '../redux/actions';
 import Header from './Header';
 
 const NUMBER = 0.5;
 const NUMBER_3 = 3;
 const NUMBER_1000 = 1000;
+const NUMBER_10 = 10;
 
 class Jogo extends Component {
   constructor() {
@@ -14,28 +15,45 @@ class Jogo extends Component {
     this.state = {
       respostas: [],
       timeLeft: 30,
-      active: false,
+      timeOver: false,
+      indice: 0,
+      dificuldade: '',
+      pontuacao: 0,
       acertou: false,
       errou: false,
     };
-    this.arrayRespostas = this.arrayRespostas.bind(this);
-    this.adicionaClasseAcerto = this.adicionaClasseAcerto.bind(this);
-    this.adicionaClasseErro = this.adicionaClasseErro.bind(this);
-    this.setRespTrue = this.setRespTrue.bind(this);
-    this.setRespFalse = this.setRespFalse.bind(this);
   }
 
   async componentDidMount() {
     await this.buscarPerguntas();
     this.arrayRespostas(0);
     this.timerFunction();
+    this.defineDificuldade();
   }
 
-  setRespTrue() {
-    this.setState({ acertou: true, errou: false });
+  componentDidUpdate(_prevProps, prevState) {
+    const { updatePontuacao } = this.props;
+    const { pontuacao } = this.state;
+    if (pontuacao !== prevState.pontuacao) {
+      return updatePontuacao(pontuacao);
+    }
   }
 
-  setRespFalse() {
+  setRespTrue = () => {
+    const { dificuldade, timeLeft } = this.state;
+    let difficultyNumber;
+    if (dificuldade === 'easy') {
+      difficultyNumber = 1;
+    } if (dificuldade === 'medium') {
+      difficultyNumber = 2;
+    } else {
+      difficultyNumber = NUMBER_3;
+    }
+    const calc = NUMBER_10 + (timeLeft * difficultyNumber);
+    this.setState({ acertou: true, errou: false, pontuacao: calc });
+  }
+
+  setRespFalse = () => {
     this.setState({ acertou: false, errou: true });
   }
 
@@ -43,6 +61,15 @@ class Jogo extends Component {
     const { token, getPerguntas } = this.props;
     localStorage.setItem('token', JSON.stringify(token));
     await getPerguntas(token);
+  }
+
+  defineDificuldade = () => {
+    const { indice, dificuldade } = this.state;
+    const { perguntas } = this.props;
+    this.setState({
+      dificuldade: perguntas[indice].difficulty,
+    });
+    console.log(dificuldade);
   }
 
   arrayTrueFalse = (index) => {
@@ -94,25 +121,39 @@ class Jogo extends Component {
       }
       if (timeLeft === 0) {
         clearInterval(this.myInterval);
-        this.setState({ active: true });
+        this.setState({ timeOver: true });
       }
     }, NUMBER_1000);
   }
 
-  adicionaClasseAcerto() {
+  correctAnswer = () => {
+    const { difficulty, timeLeft } = this.state;
+    let difficultyNumber;
+    if (difficulty === 'easy') {
+      difficultyNumber = 1;
+    } if (difficulty === 'medium') {
+      difficultyNumber = 2;
+    } else {
+      difficultyNumber = NUMBER_3;
+    }
+    const calc = NUMBER_10 + (timeLeft * difficultyNumber);
+    this.setState({ pontuacao: calc });
+  }
+
+  adicionaClasseAcerto = () => {
     const { acertou, errou } = this.state;
     if (acertou || errou) return 'acertou';
     console.log('acertou');
   }
 
-  adicionaClasseErro() {
+  adicionaClasseErro = () => {
     const { acertou, errou } = this.state;
     if (acertou || errou) return 'errou';
   }
 
   render() {
     const { perguntas } = this.props;
-    const { respostas, timeLeft, active } = this.state;
+    const { respostas, timeLeft, timeOver } = this.state;
     if (!perguntas) return <h1>Loading...</h1>;
     return (
       <section>
@@ -137,7 +178,7 @@ class Jogo extends Component {
                     key={ i }
                     type="button"
                     data-testid="correct-answer"
-                    disabled={ active }
+                    disabled={ timeOver }
                   >
                     {values[0]}
                   </button>
@@ -150,7 +191,7 @@ class Jogo extends Component {
                   key={ i }
                   type="button"
                   data-testid={ `wrong-answer-${values[1]}` }
-                  disabled={ active }
+                  disabled={ timeOver }
                 >
                   {values[0]}
                 </button>
@@ -167,10 +208,12 @@ Jogo.propTypes = {
   token: PropTypes.string.isRequired,
   getPerguntas: PropTypes.func.isRequired,
   perguntas: PropTypes.arrayOf.isRequired,
+  updatePontuacao: PropTypes.string.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
   getPerguntas: (token) => dispatch(fetchPerguntas(token)),
+  updatePontuacao: (pontuacao) => dispatch(updatePoints(pontuacao)),
 });
 
 const mapStateToProps = (state) => ({
