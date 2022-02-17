@@ -6,12 +6,15 @@ import Header from './Header';
 
 const NUMBER = 0.5;
 const NUMBER_3 = 3;
+const NUMBER_1000 = 1000;
 
 class Jogo extends Component {
   constructor() {
     super();
     this.state = {
       respostas: [],
+      timeLeft: 30,
+      active: false,
     };
     this.arrayRespostas = this.arrayRespostas.bind(this);
   }
@@ -19,15 +22,16 @@ class Jogo extends Component {
   async componentDidMount() {
     await this.buscarPerguntas();
     this.arrayRespostas(0);
+    this.timerFunction();
   }
 
-  async buscarPerguntas() {
+  buscarPerguntas = async () => {
     const { token, getPerguntas } = this.props;
     localStorage.setItem('token', JSON.stringify(token));
     await getPerguntas(token);
   }
 
-  arrayTrueFalse(index) {
+  arrayTrueFalse = (index) => {
     const { perguntas } = this.props;
     const accPergunts = [];
     const res = [0, 1];
@@ -43,7 +47,7 @@ class Jogo extends Component {
     this.setState({ respostas: res });
   }
 
-  arrayRespostas(index) {
+  arrayRespostas = (index) => {
     const { perguntas } = this.props;
     console.log(perguntas.length);
     console.log(perguntas[0].type);
@@ -65,13 +69,38 @@ class Jogo extends Component {
     }
   }
 
+  timerFunction = () => {
+    // Ives: timer src = https://betterprogramming.pub/building-a-simple-countdown-timer-with-react-4ca32763dda7
+    this.myInterval = setInterval(() => {
+      const { timeLeft } = this.state;
+      if (timeLeft > 0) {
+        this.setState((prev) => ({
+          timeLeft: prev.timeLeft - 1,
+        }));
+      }
+      if (timeLeft === 0) {
+        clearInterval(this.myInterval);
+        this.setState({ active: true });
+      }
+    }, NUMBER_1000);
+  }
+
+  // resposta = ({ target }) => {
+
+  // }
+
   render() {
     const { perguntas } = this.props;
-    const { respostas } = this.state;
+    const { respostas, timeLeft, active } = this.state;
     if (!perguntas) return <h1>Loading...</h1>;
     return (
       <section>
         <Header />
+        <section>
+          Tempo:
+          {' '}
+          {timeLeft}
+        </section>
         <section>
           <h3 data-testid="question-category">{perguntas[0].category}</h3>
           <p data-testid="question-text">{perguntas[0].question}</p>
@@ -81,7 +110,12 @@ class Jogo extends Component {
               const values = Object.values(resp);
               if (keys[0] === 'correct_answer') {
                 return (
-                  <button key={ i } type="button" data-testid="correct-answer">
+                  <button
+                    key={ i }
+                    type="button"
+                    data-testid="correct-answer"
+                    disabled={ active }
+                  >
                     {values[0]}
                   </button>
                 );
@@ -91,6 +125,7 @@ class Jogo extends Component {
                   key={ i }
                   type="button"
                   data-testid={ `wrong-answer-${values[1]}` }
+                  disabled={ active }
                 >
                   {values[0]}
                 </button>
