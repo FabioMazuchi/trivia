@@ -19,6 +19,8 @@ class Jogo extends Component {
       indice: 0,
       dificuldade: '',
       pontuacao: 0,
+      acertou: false,
+      errou: false,
     };
   }
 
@@ -35,6 +37,23 @@ class Jogo extends Component {
     if (pontuacao !== prevState.pontuacao) {
       return updatePontuacao(pontuacao);
     }
+  }
+
+  setRespTrue = () => {
+    let difficultyNumber;
+    if (difficulty === 'easy') {
+      difficultyNumber = 1;
+    } if (difficulty === 'medium') {
+      difficultyNumber = 2;
+    } else {
+      difficultyNumber = NUMBER_3;
+    }
+    const calc = NUMBER_10 + (timeLeft * difficultyNumber);
+    this.setState({ acertou: true, errou: false, pontuacao: calc });
+  }
+
+  setRespFalse = () => {
+    this.setState({ acertou: false, errou: true });
   }
 
   buscarPerguntas = async () => {
@@ -119,9 +138,17 @@ class Jogo extends Component {
     const calc = NUMBER_10 + (timeLeft * difficultyNumber);
     this.setState({ pontuacao: calc });
   }
-  // resposta = ({ target }) => {
 
-  // }
+  adicionaClasseAcerto = () => {
+    const { acertou, errou } = this.state;
+    if (acertou || errou) return 'acertou';
+    console.log('acertou');
+  }
+
+  adicionaClasseErro = () => {
+    const { acertou, errou } = this.state;
+    if (acertou || errou) return 'errou';
+  }
 
   render() {
     const { perguntas } = this.props;
@@ -145,11 +172,12 @@ class Jogo extends Component {
               if (keys[0] === 'correct_answer') {
                 return (
                   <button
+                    className={ this.adicionaClasseAcerto() }
+                    onClick={ this.setRespTrue }
                     key={ i }
                     type="button"
                     data-testid="correct-answer"
                     disabled={ timeOver }
-                    onClick={ this.correctAnswer }
                   >
                     {values[0]}
                   </button>
@@ -157,6 +185,8 @@ class Jogo extends Component {
               }
               return (
                 <button
+                  className={ this.adicionaClasseErro() }
+                  onClick={ this.setRespFalse }
                   key={ i }
                   type="button"
                   data-testid={ `wrong-answer-${values[1]}` }
