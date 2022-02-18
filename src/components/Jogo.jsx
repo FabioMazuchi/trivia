@@ -1,30 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import INITIAL_STATE from '../data';
 import { fetchPerguntas, updatePoints } from '../redux/actions';
 import Header from './Header';
 import Perguntas from './Perguntas';
+import Feedback from './Feedback';
 
 const NUMBER = 0.5;
 const NUMBER_3 = 3;
 const NUMBER_1000 = 1000;
 const NUMBER_10 = 10;
+const NUMBER_4 = 4;
 
 class Jogo extends Component {
   constructor() {
     super();
-    this.state = {
-      respostas: [],
-      timeLeft: 30,
-      timeOver: false,
-      indice: 0,
-      dificuldade: '',
-      pontuacao: 0,
-      acertou: false,
-      errou: false,
-      mostrarBotaoNext: false,
-      proximaPergunta: 0,
-    };
+    this.state = INITIAL_STATE;
   }
 
   async componentDidMount() {
@@ -43,6 +35,10 @@ class Jogo extends Component {
     }
     if (proximaPergunta !== prevState.proximaPergunta) {
       this.arrayRespostas(proximaPergunta);
+    }
+    if (proximaPergunta === NUMBER_4) {
+      console.log('show');
+      this.exibirFeedback();
     }
   }
 
@@ -77,12 +73,11 @@ class Jogo extends Component {
   };
 
   defineDificuldade = () => {
-    const { indice, dificuldade } = this.state;
+    const { indice } = this.state;
     const { perguntas } = this.props;
     this.setState({
       dificuldade: perguntas[indice].difficulty,
     });
-    console.log(dificuldade);
   };
 
   arrayTrueFalse = (index) => {
@@ -103,8 +98,6 @@ class Jogo extends Component {
 
   arrayRespostas = (index) => {
     const { perguntas } = this.props;
-    console.log(perguntas.length);
-    console.log(perguntas[0].type);
     if (perguntas[index].type !== 'multiple') {
       this.arrayTrueFalse(index);
     } else {
@@ -151,13 +144,14 @@ class Jogo extends Component {
       difficultyNumber = NUMBER_3;
     }
     const calc = NUMBER_10 + timeLeft * difficultyNumber;
-    this.setState({ pontuacao: calc });
+    this.setState(((prevState) => ({
+      pontuacao: prevState.pontuacao + calc,
+    })));
   };
 
   adicionaClasseAcerto = () => {
     const { acertou, errou } = this.state;
     if (acertou || errou) return 'acertou';
-    console.log('acertou');
   };
 
   adicionaClasseErro = () => {
@@ -172,46 +166,58 @@ class Jogo extends Component {
       errou: false,
       acertou: false,
       mostrarBotaoNext: false,
+      timeLeft: 30,
     });
+  };
+
+  exibirFeedback = () => {
+    this.setState({ proximaPergunta: 0, mostrarBotaoNext: false });
+    setTimeout(() => this.setState({ showFeedback: true }), NUMBER_1000);
   };
 
   render() {
     const { perguntas } = this.props;
     const { respostas, timeLeft, timeOver } = this.state;
-    const { mostrarBotaoNext, proximaPergunta } = this.state;
+    const { mostrarBotaoNext, proximaPergunta, showFeedback } = this.state;
     if (!perguntas) return <h1>Loading...</h1>;
     return (
       <section>
         <Header />
-        <section>
-          Tempo:
-          {timeLeft}
-        </section>
-        <section>
-          <h3 data-testid="question-category">
-            {perguntas[proximaPergunta].category}
-          </h3>
-          <p data-testid="question-text">
-            {perguntas[proximaPergunta].question}
-          </p>
-          <Perguntas
-            respostas={ respostas }
-            timeOver={ timeOver }
-            acerto={ this.adicionaClasseAcerto }
-            setRespTrue={ this.setRespTrue }
-            erro={ this.adicionaClasseErro }
-            setRespFalse={ this.setRespFalse }
-          />
-          {mostrarBotaoNext && (
-            <button
-              data-testid="btn-next"
-              type="button"
-              onClick={ this.nextQuestion }
-            >
-              Next
-            </button>
-          )}
-        </section>
+        {showFeedback ? (
+          <Feedback />
+        ) : (
+          <>
+            <section>
+              Tempo:
+              {timeLeft}
+            </section>
+            <section>
+              <h3 data-testid="question-category">
+                {perguntas[proximaPergunta].category}
+              </h3>
+              <p data-testid="question-text">
+                {perguntas[proximaPergunta].question}
+              </p>
+              <Perguntas
+                respostas={ respostas }
+                timeOver={ timeOver }
+                acerto={ this.adicionaClasseAcerto }
+                setRespTrue={ this.setRespTrue }
+                erro={ this.adicionaClasseErro }
+                setRespFalse={ this.setRespFalse }
+              />
+              {mostrarBotaoNext && (
+                <button
+                  data-testid="btn-next"
+                  type="button"
+                  onClick={ this.nextQuestion }
+                >
+                  Next
+                </button>
+              )}
+            </section>
+          </>
+        )}
       </section>
     );
   }
