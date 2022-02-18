@@ -1,67 +1,81 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { fetchPerguntas, updatePoints } from '../redux/actions';
-import Header from './Header';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { fetchPerguntas, updatePoints } from "../redux/actions";
+import Header from "./Header";
 
 const NUMBER = 0.5;
 const NUMBER_3 = 3;
 const NUMBER_1000 = 1000;
 const NUMBER_10 = 10;
 
+const INITIAL_STATE = {
+  respostas: [],
+  timeLeft: 30,
+  timeOver: false,
+  indice: 0,
+  dificuldade: "",
+  pontuacao: 0,
+  acertou: false,
+  errou: false,
+  mostrarBotaoNext: false,
+  proximaPergunta: 0,
+};
+
 class Jogo extends Component {
   constructor() {
     super();
-    this.state = {
-      respostas: [],
-      timeLeft: 30,
-      timeOver: false,
-      indice: 0,
-      dificuldade: '',
-      pontuacao: 0,
-      acertou: false,
-      errou: false,
-    };
+    this.state = INITIAL_STATE;
   }
 
   async componentDidMount() {
+    const { proximaPergunta } = this.state;
     await this.buscarPerguntas();
-    this.arrayRespostas(0);
+    this.arrayRespostas(proximaPergunta);
     this.timerFunction();
     this.defineDificuldade();
   }
 
   componentDidUpdate(_prevProps, prevState) {
     const { updatePontuacao } = this.props;
-    const { pontuacao } = this.state;
+    const { pontuacao, proximaPergunta } = this.state;
     if (pontuacao !== prevState.pontuacao) {
       return updatePontuacao(pontuacao);
+    }
+    if (proximaPergunta !== prevState.proximaPergunta) {
+      this.arrayRespostas(proximaPergunta);
     }
   }
 
   setRespTrue = () => {
     const { dificuldade, timeLeft } = this.state;
     let difficultyNumber;
-    if (dificuldade === 'easy') {
+    if (dificuldade === "easy") {
       difficultyNumber = 1;
-    } if (dificuldade === 'medium') {
+    }
+    if (dificuldade === "medium") {
       difficultyNumber = 2;
     } else {
       difficultyNumber = NUMBER_3;
     }
-    const calc = NUMBER_10 + (timeLeft * difficultyNumber);
-    this.setState({ acertou: true, errou: false, pontuacao: calc });
-  }
+    const calc = NUMBER_10 + timeLeft * difficultyNumber;
+    this.setState({
+      acertou: true,
+      errou: false,
+      pontuacao: calc,
+      mostrarBotaoNext: true,
+    });
+  };
 
   setRespFalse = () => {
-    this.setState({ acertou: false, errou: true });
-  }
+    this.setState({ acertou: false, errou: true, mostrarBotaoNext: true });
+  };
 
   buscarPerguntas = async () => {
     const { token, getPerguntas } = this.props;
-    localStorage.setItem('token', JSON.stringify(token));
+    localStorage.setItem("token", JSON.stringify(token));
     await getPerguntas(token);
-  }
+  };
 
   defineDificuldade = () => {
     const { indice, dificuldade } = this.state;
@@ -70,7 +84,7 @@ class Jogo extends Component {
       dificuldade: perguntas[indice].difficulty,
     });
     console.log(dificuldade);
-  }
+  };
 
   arrayTrueFalse = (index) => {
     const { perguntas } = this.props;
@@ -86,13 +100,13 @@ class Jogo extends Component {
       res.splice([list[i]], 1, element);
     });
     this.setState({ respostas: res });
-  }
+  };
 
   arrayRespostas = (index) => {
     const { perguntas } = this.props;
     console.log(perguntas.length);
     console.log(perguntas[0].type);
-    if (perguntas[index].type !== 'multiple') {
+    if (perguntas[index].type !== "multiple") {
       this.arrayTrueFalse(index);
     } else {
       const accPergunts = [];
@@ -108,7 +122,7 @@ class Jogo extends Component {
       });
       this.setState({ respostas: res });
     }
-  }
+  };
 
   timerFunction = () => {
     // Ives: timer src = https://betterprogramming.pub/building-a-simple-countdown-timer-with-react-4ca32763dda7
@@ -124,61 +138,70 @@ class Jogo extends Component {
         this.setState({ timeOver: true });
       }
     }, NUMBER_1000);
-  }
+  };
 
   correctAnswer = () => {
     const { difficulty, timeLeft } = this.state;
     let difficultyNumber;
-    if (difficulty === 'easy') {
+    if (difficulty === "easy") {
       difficultyNumber = 1;
-    } if (difficulty === 'medium') {
+    }
+    if (difficulty === "medium") {
       difficultyNumber = 2;
     } else {
       difficultyNumber = NUMBER_3;
     }
-    const calc = NUMBER_10 + (timeLeft * difficultyNumber);
+    const calc = NUMBER_10 + timeLeft * difficultyNumber;
     this.setState({ pontuacao: calc });
-  }
+  };
 
   adicionaClasseAcerto = () => {
     const { acertou, errou } = this.state;
-    if (acertou || errou) return 'acertou';
-    console.log('acertou');
-  }
+    if (acertou || errou) return "acertou";
+    console.log("acertou");
+  };
 
   adicionaClasseErro = () => {
     const { acertou, errou } = this.state;
-    if (acertou || errou) return 'errou';
-  }
+    if (acertou || errou) return "errou";
+  };
+
+  nextQuestion = () => {
+    const { proximaPergunta } = this.state;
+    this.setState({
+      proximaPergunta: proximaPergunta + 1,
+    }, () => this.setState(INITIAL_STATE));
+  };
 
   render() {
     const { perguntas } = this.props;
-    const { respostas, timeLeft, timeOver } = this.state;
+    const { respostas, timeLeft, timeOver, mostrarBotaoNext, proximaPergunta } =
+      this.state;
     if (!perguntas) return <h1>Loading...</h1>;
     return (
       <section>
         <Header />
+        <section>Tempo: {timeLeft}</section>
         <section>
-          Tempo:
-          {' '}
-          {timeLeft}
-        </section>
-        <section>
-          <h3 data-testid="question-category">{perguntas[0].category}</h3>
-          <p data-testid="question-text">{perguntas[0].question}</p>
+          <h3 data-testid="question-category">
+            {perguntas[proximaPergunta].category}
+          </h3>
+          <p data-testid="question-text">
+            {perguntas[proximaPergunta].question}
+          </p>
           <ul data-testid="answer-options">
             {respostas.map((resp, i) => {
               const keys = Object.keys(resp);
               const values = Object.values(resp);
-              if (keys[0] === 'correct_answer') {
+              if (keys[0] === "correct_answer") {
                 return (
                   <button
-                    className={ this.adicionaClasseAcerto() }
-                    onClick={ this.setRespTrue }
-                    key={ i }
+                    className={this.adicionaClasseAcerto()}
+                    onClick={this.setRespTrue}
+                    key={i}
                     type="button"
                     data-testid="correct-answer"
-                    disabled={ timeOver }
+                    disabled={timeOver}
                   >
                     {values[0]}
                   </button>
@@ -186,18 +209,27 @@ class Jogo extends Component {
               }
               return (
                 <button
-                  className={ this.adicionaClasseErro() }
-                  onClick={ this.setRespFalse }
-                  key={ i }
+                  className={this.adicionaClasseErro()}
+                  onClick={this.setRespFalse}
+                  key={i}
                   type="button"
-                  data-testid={ `wrong-answer-${values[1]}` }
-                  disabled={ timeOver }
+                  data-testid={`wrong-answer-${values[1]}`}
+                  disabled={timeOver}
                 >
                   {values[0]}
                 </button>
               );
             })}
           </ul>
+          {mostrarBotaoNext && (
+            <button
+              data-testid="btn-next"
+              type="button"
+              onClick={this.nextQuestion}
+            >
+              Next
+            </button>
+          )}
         </section>
       </section>
     );
