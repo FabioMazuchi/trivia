@@ -20,7 +20,7 @@ class Feedback extends Component {
 
   msgFeedback = () => {
     const { acertos } = this.props;
-    if (acertos < 3) {
+    if (acertos < 2) {
       this.setState({ msg: 'Could be better...'})
     } else {
       this.setState({ msg: 'Well Done!'})
@@ -49,6 +49,9 @@ class Feedback extends Component {
         <h1 data-testid="feedback-total-question">{acertos}</h1>
         <h1 data-testid="feedback-text">{msg}</h1>
         <Link to="/" data-testid="btn-play-again">Play Again</Link>
+        <Link className="config" data-testid="btn-ranking" to="/ranking">
+          Ranking
+        </Link>
       </header>
     );
   }
