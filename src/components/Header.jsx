@@ -35,7 +35,6 @@ class Header extends Component {
         />
         <span data-testid="header-player-name">{nome}</span>
         <span data-testid="header-score">
-          Placar:
           {pontuacao}
         </span>
       </header>
