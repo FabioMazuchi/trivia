@@ -1,13 +1,14 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import md5 from 'crypto-js/md5';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 
 class Feedback extends Component {
   constructor() {
     super();
     this.state = {
-      url: "",
+      url: '',
       msg: '',
     };
     this.convertEmail = this.convertEmail.bind(this);
@@ -21,9 +22,9 @@ class Feedback extends Component {
   msgFeedback = () => {
     const { acertos } = this.props;
     if (acertos < 2) {
-      this.setState({ msg: 'Could be better...'})
+      this.setState({ msg: 'Could be better...' });
     } else {
-      this.setState({ msg: 'Well Done!'})
+      this.setState({ msg: 'Well Done!' });
     }
   };
 
@@ -40,7 +41,7 @@ class Feedback extends Component {
     console.log(typeof pontuacao.toString);
     return (
       <header>
-        <img data-testid="header-profile-picture" src={url} alt={nome} />
+        <img data-testid="header-profile-picture" src={ url } alt={ nome } />
         <span data-testid="header-player-name">{nome}</span>
         <span data-testid="header-score">
           {pontuacao}
@@ -56,6 +57,13 @@ class Feedback extends Component {
     );
   }
 }
+
+Feedback.propTypes = {
+  acertos: PropTypes.number.isRequired,
+  email: PropTypes.string.isRequired,
+  nome: PropTypes.number.isRequired,
+  pontuacao: PropTypes.number.isRequired,
+};
 
 const mapStateToProps = (state) => {
   console.log(state);

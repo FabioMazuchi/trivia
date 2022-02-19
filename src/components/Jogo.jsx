@@ -1,11 +1,10 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import INITIAL_STATE from "../data";
-import { fetchPerguntas, updatePoints } from "../redux/actions";
-import Header from "./Header";
-import Perguntas from "./Perguntas";
-import Feedback from "./Feedback";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import INITIAL_STATE from '../data';
+import { fetchPerguntas, updatePoints } from '../redux/actions';
+import Header from './Header';
+import Perguntas from './Perguntas';
 
 const NUMBER = 0.5;
 const NUMBER_3 = 3;
@@ -29,7 +28,7 @@ class Jogo extends Component {
 
   componentDidUpdate(_prevProps, prevState) {
     const { updatePontuacao } = this.props;
-    const { pontuacao, proximaPergunta } = this.state;
+    const { pontuacao } = this.state;
     if (pontuacao !== prevState.pontuacao) {
       updatePontuacao(pontuacao);
     }
@@ -41,10 +40,10 @@ class Jogo extends Component {
   setRespTrue = () => {
     const { dificuldade, timeLeft } = this.state;
     let difficultyNumber;
-    if (dificuldade === "easy") {
+    if (dificuldade === 'easy') {
       difficultyNumber = 1;
     }
-    if (dificuldade === "medium") {
+    if (dificuldade === 'medium') {
       difficultyNumber = 2;
     } else {
       difficultyNumber = NUMBER_3;
@@ -64,7 +63,7 @@ class Jogo extends Component {
 
   buscarPerguntas = async () => {
     const { token, getPerguntas } = this.props;
-    localStorage.setItem("token", JSON.stringify(token));
+    localStorage.setItem('token', JSON.stringify(token));
     await getPerguntas(token);
   };
 
@@ -94,7 +93,7 @@ class Jogo extends Component {
 
   arrayRespostas = (index) => {
     const { perguntas } = this.props;
-    if (perguntas[index].type !== "multiple") {
+    if (perguntas[index].type !== 'multiple') {
       this.arrayTrueFalse(index);
     } else {
       const accPergunts = [];
@@ -131,10 +130,10 @@ class Jogo extends Component {
   correctAnswer = () => {
     const { difficulty, timeLeft } = this.state;
     let difficultyNumber;
-    if (difficulty === "easy") {
+    if (difficulty === 'easy') {
       difficultyNumber = 1;
     }
-    if (difficulty === "medium") {
+    if (difficulty === 'medium') {
       difficultyNumber = 2;
     } else {
       difficultyNumber = NUMBER_3;
@@ -147,12 +146,12 @@ class Jogo extends Component {
 
   adicionaClasseAcerto = () => {
     const { acertou, errou } = this.state;
-    if (acertou || errou) return "acertou";
+    if (acertou || errou) return 'acertou';
   };
 
   adicionaClasseErro = () => {
     const { acertou, errou } = this.state;
-    if (acertou || errou) return "errou";
+    if (acertou || errou) return 'errou';
   };
 
   nextQuestion = () => {
@@ -168,14 +167,14 @@ class Jogo extends Component {
 
   exibirFeedback = () => {
     const { history } = this.props;
-    history.push("/feed");
+    history.push('/feed');
   };
 
   render() {
-    console.log("renderizei");
+    console.log('renderizei');
     const { perguntas } = this.props;
     const { respostas, timeLeft, timeOver } = this.state;
-    const { mostrarBotaoNext, proximaPergunta, showFeedback } = this.state;
+    const { mostrarBotaoNext, proximaPergunta } = this.state;
     if (!perguntas) return <h1>Loading...</h1>;
     return (
       <section>
@@ -185,9 +184,8 @@ class Jogo extends Component {
           {timeLeft}
         </section>
         <section>
-          {proximaPergunta !== 5 && (
+          {proximaPergunta !== NUMBER_5 && (
             <>
-              <p>Pergunta n {proximaPergunta + 1}</p>
               <h3 data-testid="question-category">
                 {perguntas[proximaPergunta].category}
               </h3>
@@ -195,18 +193,18 @@ class Jogo extends Component {
                 {perguntas[proximaPergunta].question}
               </p>
               <Perguntas
-                respostas={respostas}
-                timeOver={timeOver}
-                acerto={this.adicionaClasseAcerto}
-                setRespTrue={this.setRespTrue}
-                erro={this.adicionaClasseErro}
-                setRespFalse={this.setRespFalse}
+                respostas={ respostas }
+                timeOver={ timeOver }
+                acerto={ this.adicionaClasseAcerto }
+                setRespTrue={ this.setRespTrue }
+                erro={ this.adicionaClasseErro }
+                setRespFalse={ this.setRespFalse }
               />
               {mostrarBotaoNext && (
                 <button
                   data-testid="btn-next"
                   type="button"
-                  onClick={this.nextQuestion}
+                  onClick={ this.nextQuestion }
                 >
                   Next
                 </button>
@@ -224,6 +222,7 @@ Jogo.propTypes = {
   getPerguntas: PropTypes.func.isRequired,
   perguntas: PropTypes.arrayOf.isRequired,
   updatePontuacao: PropTypes.string.isRequired,
+  history: PropTypes.objectOf.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
