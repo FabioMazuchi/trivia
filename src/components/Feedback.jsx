@@ -7,6 +7,7 @@ class Feedback extends Component {
     super();
     this.state = {
       url: "",
+      msg: '',
     };
     this.convertEmail = this.convertEmail.bind(this);
   }
@@ -18,8 +19,11 @@ class Feedback extends Component {
 
   msgFeedback = () => {
     const { acertos } = this.props;
-    if (acertos < 3) return "Could be better...";
-    return "Well Done!";
+    if (acertos < 3) {
+      this.setState({ msg: 'Could be better...'})
+    } else {
+      this.setState({ msg: 'Well Done!'})
+    }
   };
 
   convertEmail() {
@@ -30,8 +34,8 @@ class Feedback extends Component {
   }
 
   render() {
-    const { nome, pontuacao } = this.props;
-    const { url } = this.state;
+    const { nome, pontuacao, acertos } = this.props;
+    const { url, msg } = this.state;
     console.log(typeof pontuacao.toString);
     return (
       <header>
@@ -40,7 +44,9 @@ class Feedback extends Component {
         <span data-testid="header-score">
           {pontuacao}
         </span>
-        <h1 data-testid="feedback-text">{this.msgFeedback()}</h1>
+        <h1 data-testid="feedback-total-score">{pontuacao}</h1>
+        <h1 data-testid="feedback-total-question">{acertos}</h1>
+        <h1 data-testid="feedback-text">{msg}</h1>
       </header>
     );
   }
