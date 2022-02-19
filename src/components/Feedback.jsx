@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import md5 from 'crypto-js/md5';
+import { Link } from 'react-router-dom';
 import { connect } from "react-redux";
 
 class Feedback extends Component {
@@ -47,6 +48,7 @@ class Feedback extends Component {
         <h1 data-testid="feedback-total-score">{pontuacao}</h1>
         <h1 data-testid="feedback-total-question">{acertos}</h1>
         <h1 data-testid="feedback-text">{msg}</h1>
+        <Link to="/" data-testid="btn-play-again">Play Again</Link>
       </header>
     );
   }
