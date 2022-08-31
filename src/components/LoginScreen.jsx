@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import logo from '../trivia.png';
 import { fetchToken, getEmailNome, fetchPerguntas, zeraAcertos } from '../redux/actions';
 
 class LoginScreen extends Component {
@@ -17,7 +15,7 @@ class LoginScreen extends Component {
   }
 
   componentWillUnmount() {
-    const { zerarAcertos } = this.props; 
+    const { zerarAcertos } = this.props;
     this.buscarPerguntas();
     zerarAcertos();
   }
@@ -55,7 +53,10 @@ class LoginScreen extends Component {
     return (
       <section className="App-header">
         {/* <img src={ logo } className="App-logo" alt="logo" /> */}
-        <h1 className='App-logo'>Quizz<span>?</span></h1>
+        <h1 className="App-logo">
+          Quizz
+          <span>?</span>
+        </h1>
         <form>
           <input
             type="text"
@@ -82,9 +83,6 @@ class LoginScreen extends Component {
             Play!
           </button>
         </form>
-        {/* <Link className="config" data-testid="btn-settings" to="/config">
-          Configuração
-        </Link> */}
       </section>
     );
   }
@@ -96,6 +94,7 @@ LoginScreen.propTypes = {
   getEmailName: PropTypes.func.isRequired,
   token: PropTypes.string.isRequired,
   getPerguntas: PropTypes.func.isRequired,
+  zerarAcertos: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({

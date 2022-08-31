@@ -1,8 +1,8 @@
-*{
+* {
+  box-sizing: border-box;
+  font-family: Gideon Roman , cursive;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-  font-family: 'Gideon Roman', cursive;
 }
 
 .App {
@@ -14,7 +14,6 @@
 }
 
 @media ( prefers-reduced-motion : no-preference ) {
-
   .App-logo {
     animation: shake infinite 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
   }
@@ -22,7 +21,7 @@
 
 .App-header {
   align-items: center;
-  background-color: #0B0033;
+  background-color: #0b0033;
   color: white;
   display: flex;
   flex-direction: column;
@@ -73,20 +72,24 @@ header span {
 }
 
 @keyframes shake {
-
-  10%, 90% {
+  10%,
+  90% {
     transform: translate3d(-1px, 0, 0);
   }
 
-  20%, 80% {
+  20%,
+  80% {
     transform: translate3d(2px, 0, 0);
   }
 
-  30%, 50%, 70% {
+  30%,
+  50%,
+  70% {
     transform: translate3d(-4px, 0, 0);
   }
 
-  40%, 60% {
+  40%,
+  60% {
     transform: translate3d(4px, 0, 0);
   }
 }
@@ -118,7 +121,7 @@ input {
 }
 
 input::placeholder {
-  color: #0B0033;
+  color: #0b0033;
 }
 
 form button {
@@ -142,7 +145,7 @@ form button:hover {
   border-radius: 12px;
   width: 90%;
   margin: 40px auto;
-  background-color: #0B0033;
+  background-color: #0b0033;
   color: white;
   margin-bottom: 130px;
 }
@@ -218,7 +221,7 @@ ul button {
   flex-direction: column;
   border-radius: 8px;
   height: 350px;
-  background-color: #0B0033;
+  background-color: #0b0033;
   color: white;
 }
 
@@ -234,7 +237,7 @@ ul button {
 .links a {
   text-decoration: none;
   margin-right: 8px;
-  color: #0B0033;
+  color: #0b0033;
   background-color: rgb(49, 138, 173);
   padding: 4px 12px;
   color: white;
@@ -274,7 +277,7 @@ footer h4 {
   font-size: 20px;
 }
 
-@media screen and (max-width:912px) {
+@media screen and (max-width: 912px) {
   .App-header h1 {
     font-size: 140px;
   }
@@ -286,13 +289,13 @@ footer h4 {
   }
 }
 
-@media screen and (max-width:540px) {
+@media screen and (max-width: 540px) {
   footer p {
     margin-bottom: 8px;
   }
 }
 
-@media screen and (max-width:450px) {
+@media screen and (max-width: 450px) {
   .App-header h1 {
     font-size: 90px;
   }
@@ -304,13 +307,13 @@ footer h4 {
   }
 }
 
-@media screen and (max-width:375px) {
+@media screen and (max-width: 375px) {
   footer p {
     margin-bottom: 8px;
   }
 }
 
-@media screen and (max-width:280px) {
+@media screen and (max-width: 280px) {
   .App-header h1 {
     font-size: 70px;
   }
