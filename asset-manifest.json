@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/trivia/static/css/main.deae1300.chunk.css",
+    "main.js": "/trivia/static/js/main.102d96c4.chunk.js",
+    "main.js.map": "/trivia/static/js/main.102d96c4.chunk.js.map",
+    "runtime-main.js": "/trivia/static/js/runtime-main.55dca74b.js",
+    "runtime-main.js.map": "/trivia/static/js/runtime-main.55dca74b.js.map",
+    "static/js/2.afe63d3c.chunk.js": "/trivia/static/js/2.afe63d3c.chunk.js",
+    "static/js/2.afe63d3c.chunk.js.map": "/trivia/static/js/2.afe63d3c.chunk.js.map",
+    "index.html": "/trivia/index.html",
+    "precache-manifest.f5488e7f925c9de4e2840f4ce22f1e18.js": "/trivia/precache-manifest.f5488e7f925c9de4e2840f4ce22f1e18.js",
+    "service-worker.js": "/trivia/service-worker.js",
+    "static/css/main.deae1300.chunk.css.map": "/trivia/static/css/main.deae1300.chunk.css.map",
+    "static/js/2.afe63d3c.chunk.js.LICENSE.txt": "/trivia/static/js/2.afe63d3c.chunk.js.LICENSE.txt",
+    "static/media/github.png": "/trivia/static/media/github.ccadf543.png",
+    "static/media/linkedin.png": "/trivia/static/media/linkedin.5bb3ed2b.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.55dca74b.js",
+    "static/js/2.afe63d3c.chunk.js",
+    "static/css/main.deae1300.chunk.css",
+    "static/js/main.102d96c4.chunk.js"
+  ]
+}
