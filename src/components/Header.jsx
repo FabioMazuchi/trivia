@@ -28,14 +28,16 @@ class Header extends Component {
     const { url } = this.state;
     return (
       <header>
-        <img
-          data-testid="header-profile-picture"
-          src={ url }
-          alt={ nome }
-        />
-        <span data-testid="header-player-name">{nome}</span>
-        <span data-testid="header-score">
-          {pontuacao}
+        <div>
+          <img
+            data-testid="header-profile-picture"
+            src={ url }
+            alt={ nome }
+          />
+          <span data-testid="header-player-name">{nome}</span>
+        </div>
+        <span className='score' data-testid="header-score">
+          Score: {pontuacao}
         </span>
       </header>
     );

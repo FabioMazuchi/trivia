@@ -1,38 +1,47 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 class Perguntas extends Component {
   render() {
-    const { respostas, timeOver, acerto, setRespTrue, erro, setRespFalse } = this.props;
+    const { respostas, timeOver, acerto, setRespTrue, erro, setRespFalse } =
+      this.props;
     return (
       <ul data-testid="answer-options">
         {respostas.map((resp, i) => {
           const keys = Object.keys(resp);
           const values = Object.values(resp);
-          if (keys[0] === 'correct_answer') {
+          if (keys[0] === "correct_answer") {
             return (
               <button
-                className={ acerto() }
-                onClick={ setRespTrue }
-                key={ i }
+                className={acerto()}
+                onClick={setRespTrue}
+                key={i}
                 type="button"
                 data-testid="correct-answer"
-                disabled={ timeOver }
+                disabled={timeOver}
               >
-                {values[0]}
+                {values[0]
+                  .replace(/&quot/g, "")
+                  .replace(/&#039/g, "")
+                  .replace(/&eacute;/g)
+                  .replace(/;/g, "")}
               </button>
             );
           }
           return (
             <button
-              className={ erro() }
-              onClick={ setRespFalse }
-              key={ i }
+              className={erro()}
+              onClick={setRespFalse}
+              key={i}
               type="button"
-              data-testid={ `wrong-answer-${values[1]}` }
-              disabled={ timeOver }
+              data-testid={`wrong-answer-${values[1]}`}
+              disabled={timeOver}
             >
-              {values[0]}
+              {values[0]
+                .replace(/&quot/g, "")
+                .replace(/&#039/g, "")
+                .replace(/&eacute;/g)
+                .replace(/;/g, "")}
             </button>
           );
         })}

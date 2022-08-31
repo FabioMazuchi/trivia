@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import INITIAL_STATE from '../data';
-import { fetchPerguntas, updatePoints } from '../redux/actions';
-import Header from './Header';
-import Perguntas from './Perguntas';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import INITIAL_STATE from "../data";
+import { fetchPerguntas, updatePoints } from "../redux/actions";
+import Header from "./Header";
+import Perguntas from "./Perguntas";
 
 const NUMBER = 0.5;
 const NUMBER_3 = 3;
@@ -40,10 +40,10 @@ class Jogo extends Component {
   setRespTrue = () => {
     const { dificuldade, timeLeft } = this.state;
     let difficultyNumber;
-    if (dificuldade === 'easy') {
+    if (dificuldade === "easy") {
       difficultyNumber = 1;
     }
-    if (dificuldade === 'medium') {
+    if (dificuldade === "medium") {
       difficultyNumber = 2;
     } else {
       difficultyNumber = NUMBER_3;
@@ -63,7 +63,7 @@ class Jogo extends Component {
 
   buscarPerguntas = async () => {
     const { token, getPerguntas } = this.props;
-    localStorage.setItem('token', JSON.stringify(token));
+    localStorage.setItem("token", JSON.stringify(token));
     await getPerguntas(token);
   };
 
@@ -93,7 +93,7 @@ class Jogo extends Component {
 
   arrayRespostas = (index) => {
     const { perguntas } = this.props;
-    if (perguntas[index].type !== 'multiple') {
+    if (perguntas[index].type !== "multiple") {
       this.arrayTrueFalse(index);
     } else {
       const accPergunts = [];
@@ -130,10 +130,10 @@ class Jogo extends Component {
   correctAnswer = () => {
     const { difficulty, timeLeft } = this.state;
     let difficultyNumber;
-    if (difficulty === 'easy') {
+    if (difficulty === "easy") {
       difficultyNumber = 1;
     }
-    if (difficulty === 'medium') {
+    if (difficulty === "medium") {
       difficultyNumber = 2;
     } else {
       difficultyNumber = NUMBER_3;
@@ -146,72 +146,80 @@ class Jogo extends Component {
 
   adicionaClasseAcerto = () => {
     const { acertou, errou } = this.state;
-    if (acertou || errou) return 'acertou';
+    if (acertou || errou) return "acertou";
   };
 
   adicionaClasseErro = () => {
     const { acertou, errou } = this.state;
-    if (acertou || errou) return 'errou';
+    if (acertou || errou) return "errou";
   };
 
   nextQuestion = () => {
     const { proximaPergunta } = this.state;
-    this.setState((prevsate) => ({
-      proximaPergunta: prevsate.proximaPergunta + 1,
-      errou: false,
-      acertou: false,
-      mostrarBotaoNext: false,
-      timeLeft: 30,
-    }), () => this.arrayRespostas(proximaPergunta));
+    this.setState(
+      (prevsate) => ({
+        proximaPergunta: prevsate.proximaPergunta + 1,
+        errou: false,
+        acertou: false,
+        mostrarBotaoNext: false,
+        timeLeft: 30,
+      }),
+      () => this.arrayRespostas(proximaPergunta)
+    );
   };
 
   exibirFeedback = () => {
     const { history } = this.props;
-    history.push('/feed');
+    history.push("/feed");
   };
 
   render() {
-    console.log('renderizei');
     const { perguntas } = this.props;
     const { respostas, timeLeft, timeOver } = this.state;
     const { mostrarBotaoNext, proximaPergunta } = this.state;
-    if (!perguntas) return <h1>Loading...</h1>;
+    if (!perguntas) return <h2>Loading...</h2>;
     return (
       <section>
         <Header />
-        <section>
-          Tempo:
-          {timeLeft}
-        </section>
-        <section>
-          {proximaPergunta !== NUMBER_5 && (
-            <>
-              <h3 data-testid="question-category">
-                {perguntas[proximaPergunta].category}
-              </h3>
-              <p data-testid="question-text">
-                {perguntas[proximaPergunta].question}
-              </p>
-              <Perguntas
-                respostas={ respostas }
-                timeOver={ timeOver }
-                acerto={ this.adicionaClasseAcerto }
-                setRespTrue={ this.setRespTrue }
-                erro={ this.adicionaClasseErro }
-                setRespFalse={ this.setRespFalse }
-              />
-              {mostrarBotaoNext && (
-                <button
-                  data-testid="btn-next"
-                  type="button"
-                  onClick={ this.nextQuestion }
-                >
-                  Next
-                </button>
-              )}
-            </>
-          )}
-        </section>
+        <div className="jogo">
+          <section>
+            {proximaPergunta !== NUMBER_5 && (
+              <>
+                <div className="topo">
+                  <span>{timeLeft}</span>
+                  <h3 data-testid="question-category">
+                    {perguntas[proximaPergunta].category}
+                  </h3>
+                </div>
+                <p data-testid="question-text">
+                  {perguntas[proximaPergunta].question
+                    .replace(/&quot/g, "")
+                    .replace(/&#039/g, "")
+                    .replace(/&eacute;/g)
+                    .replace(/;/g, "")}
+                </p>
+                <Perguntas
+                  respostas={respostas}
+                  timeOver={timeOver}
+                  acerto={this.adicionaClasseAcerto}
+                  setRespTrue={this.setRespTrue}
+                  erro={this.adicionaClasseErro}
+                  setRespFalse={this.setRespFalse}
+                />
+                {mostrarBotaoNext && (
+                  <button
+                    className="next"
+                    data-testid="btn-next"
+                    type="button"
+                    onClick={this.nextQuestion}
+                  >
+                    Next
+                  </button>
+                )}
+              </>
+            )}
+          </section>
+        </div>
       </section>
     );
   }

@@ -1,4 +1,4 @@
-import { GET_EMAIL_NOME, UPDATE_POINTS } from '../actions';
+import { GET_EMAIL_NOME, UPDATE_POINTS, ZERA_ACERTOS } from '../actions';
 
 const INITIAL_STATE = {
   name: '',
@@ -21,6 +21,8 @@ const player = (state = INITIAL_STATE, action) => {
       score: action.payload,
       assertions: state.assertions + 1,
     };
+  case ZERA_ACERTOS:
+    return { ...state, assertions: 0 };
   default:
     return state;
   }

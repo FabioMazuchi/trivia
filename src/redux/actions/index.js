@@ -5,6 +5,7 @@ export const GET_PERGUNTAS = 'GET_PERGUNTAS';
 export const FAILED_REQUEST = 'FAILED_REQUEST';
 export const GET_EMAIL_NOME = 'GET_EMAIL_NOME';
 export const UPDATE_POINTS = 'UPDATE_POINTS';
+export const ZERA_ACERTOS = 'ZERA_ACERTOS';
 
 export function requestPerguntas() {
   return { type: REQUEST_PERGUNTAS };
@@ -28,6 +29,10 @@ function getToken(json) {
 
 export function updatePoints(payload) {
   return { type: UPDATE_POINTS, payload };
+}
+
+export function zeraAcertos() {
+  return { type: ZERA_ACERTOS };
 }
 
 const NUMBER = 3;

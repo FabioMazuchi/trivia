@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import logo from '../trivia.png';
-import { fetchToken, getEmailNome, fetchPerguntas } from '../redux/actions';
+import { fetchToken, getEmailNome, fetchPerguntas, zeraAcertos } from '../redux/actions';
 
 class LoginScreen extends Component {
   constructor() {
@@ -17,7 +17,9 @@ class LoginScreen extends Component {
   }
 
   componentWillUnmount() {
+    const { zerarAcertos } = this.props; 
     this.buscarPerguntas();
+    zerarAcertos();
   }
 
   handleChange = ({ target }) => {
@@ -51,8 +53,9 @@ class LoginScreen extends Component {
   render() {
     const { name, email } = this.state;
     return (
-      <>
-        <img src={ logo } className="App-logo" alt="logo" />
+      <section className="App-header">
+        {/* <img src={ logo } className="App-logo" alt="logo" /> */}
+        <h1 className='App-logo'>Quizz<span>?</span></h1>
         <form>
           <input
             type="text"
@@ -79,10 +82,10 @@ class LoginScreen extends Component {
             Play!
           </button>
         </form>
-        <Link className="config" data-testid="btn-settings" to="/config">
+        {/* <Link className="config" data-testid="btn-settings" to="/config">
           Configuração
-        </Link>
-      </>
+        </Link> */}
+      </section>
     );
   }
 }
@@ -99,6 +102,7 @@ const mapDispatchToProps = (dispatch) => ({
   getToken: () => dispatch(fetchToken()),
   getEmailName: (state) => dispatch(getEmailNome(state)),
   getPerguntas: (token) => dispatch(fetchPerguntas(token)),
+  zerarAcertos: () => dispatch(zeraAcertos()),
 });
 
 const mapStateToProps = (state) => ({
